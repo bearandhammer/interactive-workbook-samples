@@ -1,3 +1,23 @@
 #!meta
 
-{"kernelInfo":{"defaultKernelName":"csharp","items":[{"name":"csharp","aliases":[]},{"name":"vscode","languageName":null,"aliases":["frontend"]}]}}
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"name":"csharp","aliases":[]},{"name":"vscode","aliases":["frontend"],"languageName":null}]}}
+
+#!markdown
+
+# Azure Blob Store SAS Token Sample :electric_plug:
+
+## NuGet Packages
+
+#!csharp
+
+#i "https://api.nuget.org/v3/index.json"
+#r "nuget:Azure.Identity"
+#r "nuget:Azure.Storage.Blobs"
+
+#!markdown
+
+## Connection
+
+#!markdown
+
+## Upload Sample Blob
