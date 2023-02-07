@@ -1,12 +1,10 @@
 #!meta
 
-{"kernelInfo":{"defaultKernelName":"csharp","items":[{"name":"csharp","aliases":[]},{"name":"vscode","aliases":["frontend"],"languageName":null}]}}
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"name":"csharp","aliases":[]},{"name":"vscode","aliases":["frontend"],"languageName":null},{"name":"sql","languageName":"SQL","aliases":[]}]}}
 
 #!markdown
 
 # Azure Blob Store SAS Token Sample :electric_plug:
-
-## NuGet Packages
 
 #!csharp
 
@@ -14,10 +12,51 @@
 #r "nuget:Azure.Identity"
 #r "nuget:Azure.Storage.Blobs"
 
-#!markdown
+#!csharp
 
-## Connection
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using System.IO;
 
-#!markdown
+#!csharp
 
-## Upload Sample Blob
+(string SasConnectionString, string ContainerName, string TestImagePath, string Base64ImageString, string BlobResourceName) GetSampleRequestSettings()
+{
+    return (
+        "<CONNECTION_STRING>",
+        "<CONTAINER_NAME>",
+        @"C:\TestImage\test-image.jpg",
+        Convert.ToBase64String(File.ReadAllBytes(testImagePath)),
+        @$"{Guid.NewGuid().ToString().ToLowerInvariant()}.jpg"
+    );
+}
+
+#!csharp
+
+var requestSettings = GetSampleRequestSettings();
+
+#!csharp
+
+Console.WriteLine($"SasConnectionString: {requestSettings.SasConnectionString}");
+Console.WriteLine($"ContainerName: {requestSettings.ContainerName}");
+Console.WriteLine($"TestImagePath: {requestSettings.TestImagePath}");
+Console.WriteLine($"Base64ImageString: {requestSettings.Base64ImageString}");
+Console.WriteLine($"BlobResourceName: {requestSettings.BlobResourceName}");
+
+#!csharp
+
+BlobContainerClient containerClient = new BlobServiceClient(requestSettings.SasConnectionString)
+    .GetBlobContainerClient(requestSettings.ContainerName);
+
+#!csharp
+
+Console.WriteLine($"Host: {containerClient.AccountName}");
+Console.WriteLine($"Host: {containerClient.Uri}");
+
+#!csharp
+
+BlobClient blobClient = containerClient.GetBlobClient(requestSettings.BlobResourceName);
+using (MemoryStream imageMemoryStream = new MemoryStream(Convert.FromBase64String(requestSettings.Base64ImageString)))
+{
+    await blobClient.UploadAsync(imageMemoryStream, new BlobHttpHeaders { ContentType = "image/jpg" });
+}
